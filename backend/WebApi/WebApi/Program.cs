@@ -1,12 +1,13 @@
 using Core.Interfaces;
 using Core.Managers;
+using Microsoft.EntityFrameworkCore;
 using Model.Context;
 using Model.Mappings;
 
 var builder = WebApplication.CreateBuilder(args);
-var connecyionString = builder.Configuration.GetConnectionString("DefaultConnection");
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 //agregar cadena de connexion
-builder.Services.AddDbContext<AppDbContext>();
+builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(connectionString));
 // Add services to the container.
 builder.Services.AddTransient<IUserManager, UserManager>();
 builder.Services.AddAutoMapper(typeof(MappingsProfiles));

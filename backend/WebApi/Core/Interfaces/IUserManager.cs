@@ -10,5 +10,8 @@ namespace Core.Interfaces
     public interface IUserManager
     {
         IEnumerable<UserDto> GetAll();
+        UserDto GetById(int id);
+        UserDto GetByUsername(string username);
+        Task<UserDto> Save(UserDto user);
     }
 }

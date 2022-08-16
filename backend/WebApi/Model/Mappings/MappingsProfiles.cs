@@ -14,6 +14,7 @@ namespace Model.Mappings
         private void UserMapping()
         {
             CreateMap<UserEntity, UserDto>();
+            CreateMap<UserDto, UserEntity>();
         }
     }
 }

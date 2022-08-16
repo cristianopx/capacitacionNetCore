@@ -24,11 +24,32 @@ namespace Core.Managers
 
         public IEnumerable<UserDto> GetAll()
         {
+            Console.WriteLine(_appDbContext.Users);
             return _appDbContext
                         .Users
                         .AsEnumerable()
                         .Select(x => _mapper.Map<UserEntity, UserDto>(x))
                         .ToList();
+        }
+
+        public UserDto GetById(int id)
+        {
+            var user = _appDbContext.Users.FirstOrDefault(u => u.Id == id);
+            return _mapper.Map<UserDto>(user);
+        }
+
+        public UserDto GetByUsername(string username)
+        {
+            var user = _appDbContext.Users.FirstOrDefault(u => u.Username == username);
+            return _mapper.Map<UserDto>(user);
+        }
+
+        public async Task<UserDto> Save(UserDto user)
+        {
+            var newUser = _mapper.Map<UserEntity>(user);
+            _appDbContext.Users.Add(newUser);
+            await _appDbContext.SaveChangesAsync();
+            return _mapper.Map<UserDto>(newUser);
         }
     }
 }

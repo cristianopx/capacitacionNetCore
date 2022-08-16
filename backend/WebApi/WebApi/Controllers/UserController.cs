@@ -24,15 +24,22 @@ namespace WebApi.Controllers
 
         // GET api/<UserController>/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public UserDto Get(int id)
         {
-            return "value";
+            return _userManager.GetById(id);
+        }
+
+        [HttpGet("/username/{username}")]
+        public UserDto Get([FromRoute] string username)
+        {
+            return _userManager.GetByUsername(username);
         }
 
         // POST api/<UserController>
         [HttpPost]
-        public void Post([FromBody] string value)
+        public async Task<UserDto> Post([FromBody] UserDto user)
         {
+            return await _userManager.Save(user);
         }
 
         // PUT api/<UserController>/5
