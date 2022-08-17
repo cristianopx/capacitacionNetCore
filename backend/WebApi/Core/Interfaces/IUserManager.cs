@@ -12,6 +12,8 @@ namespace Core.Interfaces
         IEnumerable<UserDto> GetAll();
         UserDto? GetById(int id);
         UserDto? GetByUsername(string username);
-        Task<UserDto> Save(UserDto user);
+        Task<UserDto> SaveAsync(UserDto user);
+        Task PutAsync(int id, UserDto user);
+        Task DeleteAsync(int id);
     }
 }

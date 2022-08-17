@@ -57,14 +57,14 @@ namespace WebApi.Controllers
         {
             try
             {
-                if (_userManager.GetByUsername(user.Username) != null)
+                if (user.Id == 0)
                 {
-                    return BadRequest($"The user {user.Username} already exists");
+                    if (_userManager.GetByUsername(user.Username) != null)
+                        return StatusCode(409, $"The user {user.Username} already exists");
+                    else
+                        return Ok(await _userManager.SaveAsync(user));
                 }
-                else
-                {
-                    return Ok(await _userManager.Save(user));
-                }
+                return BadRequest();
             }
             catch (Exception e)
             {
@@ -74,14 +74,57 @@ namespace WebApi.Controllers
 
         // PUT api/<UserController>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public async Task<IActionResult> Put(int id, [FromBody] UserDto user)
         {
+            try
+            {
+                if (id == user.Id)
+                {
+                    var userToModified = _userManager.GetById(id);
+                    if(userToModified != null)
+                    {
+                        if(userToModified.Username == user.Username)
+                        {
+                            await _userManager.PutAsync(id, user);
+                            return Ok("User updated");
+                        }
+                        return StatusCode(409, "Unequal usernames");
+                    }
+                    else
+                    {
+                        return NotFound();
+                    }
+                }
+                return StatusCode(409, "Unequal Ids");
+
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, e.Message);
+            }
         }
 
         // DELETE api/<UserController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
+            try
+            {
+                var user = _userManager.GetById(id);
+                if (user == null)
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    await _userManager.DeleteAsync(id);
+                    return Ok("User deleted");
+                }
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, e.Message);
+            }
         }
     }
 }

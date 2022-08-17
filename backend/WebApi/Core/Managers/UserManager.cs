@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
 using Core.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using Model.Context;
 using Model.DTOs;
 using Model.Entity;
@@ -44,13 +45,33 @@ namespace Core.Managers
             return _mapper.Map<UserDto>(user);
         }
 
-        public async Task<UserDto> Save(UserDto user)
+        public async Task<UserDto> SaveAsync(UserDto user)
         {
             var newUser = _mapper.Map<UserEntity>(user);
             newUser.DateCreated = DateTime.Now;
             _appDbContext.Users.Add(newUser);
             await _appDbContext.SaveChangesAsync();
             return _mapper.Map<UserDto>(newUser);
+        }
+
+        public async Task PutAsync(int id, UserDto user)
+        {
+            var userToModified = await _appDbContext.Users.FirstOrDefaultAsync(u => u.Id == id);
+            if (userToModified != null)
+            {
+                userToModified.Password = user.Password;
+                userToModified.Fullname = user.Fullname;
+                _appDbContext.Users.Update(userToModified);
+                await _appDbContext.SaveChangesAsync();
+            }
+        }
+
+        public async Task DeleteAsync(int id)
+        {
+            var user = await _appDbContext.Users.FirstOrDefaultAsync(u => u.Id == id);
+            if (user != null)
+                _appDbContext.Users.Remove(user);
+            await _appDbContext.SaveChangesAsync();
         }
     }
 }
