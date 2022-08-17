@@ -37,9 +37,23 @@ namespace WebApi.Controllers
 
         // POST api/<UserController>
         [HttpPost]
-        public async Task<UserDto> Post([FromBody] UserDto user)
+        public async Task<IActionResult> Post([FromBody] UserDto user)
         {
-            return await _userManager.Save(user);
+            try
+            {
+                if (_userManager.GetByUsername(user.Username) != null)
+                {
+                    return BadRequest($"The user {user.Username} already exists");
+                }
+                else
+                {
+                    return Ok(await _userManager.Save(user));
+                }
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, e.Message);
+            }
         }
 
         // PUT api/<UserController>/5
