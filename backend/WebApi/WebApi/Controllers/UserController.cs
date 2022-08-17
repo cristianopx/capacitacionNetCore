@@ -17,22 +17,38 @@ namespace WebApi.Controllers
         }
         // GET: api/<UserController>
         [HttpGet]
-        public IEnumerable<UserDto> GetAll()
+        public IActionResult GetAll()
         {
-            return _userManager.GetAll();
+            try
+            {
+                return Ok(_userManager.GetAll());
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, e.Message);
+            }
         }
 
         // GET api/<UserController>/5
         [HttpGet("{id}")]
-        public UserDto Get(int id)
+        public IActionResult Get(int id)
         {
-            return _userManager.GetById(id);
+            var user = _userManager.GetById(id);
+            return user == null ? NotFound() : Ok(user);
         }
 
         [HttpGet("/username/{username}")]
-        public UserDto Get([FromRoute] string username)
+        public IActionResult Get([FromRoute] string username)
         {
-            return _userManager.GetByUsername(username);
+            try
+            {
+                var user = _userManager.GetByUsername(username);
+                return user == null ? NotFound() : Ok(user);
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, e.Message);
+            }
         }
 
         // POST api/<UserController>
