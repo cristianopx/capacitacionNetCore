@@ -1,5 +1,7 @@
-
 CREATE TABLE Users (
-	Id int IDENTITY(0,1) NOT NULL,
-	Username varchar(100) COLLATE SQL_Latin1_General_CP1_CI_AS NOT NULL
+        Id int IDENTITY(0,1) NOT NULL,
+        Username varchar(100) NOT NULL,
+	Password varchar(20) NOT NULL,
+	Fullname varchar(100),
+	CreationDate datetime NOT NULL
 );
