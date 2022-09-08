@@ -1,0 +1,34 @@
+p{
+    font-family: 'Rowdies', cursive;
+    font-size: 2.3em;
+    color: #eeeeee;
+}
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+hr {
+    border-width: 3px;
+    max-width: 65px;
+    border-color: #6a83f0;
+    margin: 10px auto;
+    opacity: 100;
+    border-radius: 10px;
+}
+
+.btn-xl{
+    background-color: #516ef3;
+    border-color: #516ef3;
+    margin: 10px;
+    padding: 1rem 2rem;
+    border-radius: 10px;
+}
+
+.btn-xl:hover{
+    background-color: #385af1;
+    border-radius: #385af1;
+    border-width: 4px;
+}

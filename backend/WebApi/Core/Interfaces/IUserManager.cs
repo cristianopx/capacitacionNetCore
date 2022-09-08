@@ -9,11 +9,11 @@ namespace Core.Interfaces
 {
     public interface IUserManager
     {
-        IEnumerable<UserDto> GetAll();
-        UserDto? GetById(int id);
-        UserDto? GetByUsername(string username);
-        Task<UserDto> SaveAsync(UserDto user);
-        Task PutAsync(int id, UserDto user);
+        Task<IEnumerable<UserDto>> GetAll();
+        Task<UserDto?> GetById(int id);
+        Task<UserDto?> GetByUsername(string username);
+        Task SaveAsync(UserDto newUser);
+        Task ChangePassword(int userId, string password);
         Task DeleteAsync(int id);
     }
 }

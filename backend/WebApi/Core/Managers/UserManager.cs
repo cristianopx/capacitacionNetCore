@@ -14,64 +14,53 @@ namespace Core.Managers
 {
     public class UserManager : IUserManager
     {
-        private readonly AppDbContext _appDbContext;
+        private readonly IUserRepository _userRepository;
         private readonly IMapper _mapper;
 
-        public UserManager(AppDbContext appDbContext, IMapper  mapper)
+        public UserManager( IMapper mapper, IUserRepository userRepository)
         {
-            _appDbContext = appDbContext;
             _mapper = mapper;
+            _userRepository = userRepository;
         }
 
-        public IEnumerable<UserDto> GetAll()
+        public async Task<IEnumerable<UserDto>> GetAll()
         {
-            Console.WriteLine(_appDbContext.Users);
-            return _appDbContext
-                        .Users
-                        .AsEnumerable()
-                        .Select(x => _mapper.Map<UserEntity, UserDto>(x))
-                        .ToList();
+            var users = await _userRepository.GetAll();
+            return users.Select(u => _mapper.Map<UserDto>(u));
         }
-
-        public UserDto? GetById(int id)
+        public async Task<UserDto?> GetById(int id)
         {
-            var user = _appDbContext.Users.FirstOrDefault(u => u.Id == id);
+            var user = await _userRepository.GetById(id);
             return _mapper.Map<UserDto>(user);
         }
 
-        public UserDto? GetByUsername(string username)
+        public async Task<UserDto?> GetByUsername(string username)
         {
-            var user = _appDbContext.Users.FirstOrDefault(u => u.Username == username);
-            return _mapper.Map<UserDto>(user);
+            var user = await _userRepository.GetByUsername(username);
+            if(user != null)
+                return _mapper.Map<UserDto>(user);
+            return null;
         }
 
-        public async Task<UserDto> SaveAsync(UserDto user)
+        public async Task SaveAsync(UserDto newUser)
         {
-            var newUser = _mapper.Map<UserEntity>(user);
             newUser.DateCreated = DateTime.Now;
-            _appDbContext.Users.Add(newUser);
-            await _appDbContext.SaveChangesAsync();
-            return _mapper.Map<UserDto>(newUser);
+            await _userRepository.SaveUser(_mapper.Map<UserEntity>(newUser));
         }
 
-        public async Task PutAsync(int id, UserDto user)
+        public async Task ChangePassword(int userId, string password)
         {
-            var userToModified = await _appDbContext.Users.FirstOrDefaultAsync(u => u.Id == id);
-            if (userToModified != null)
+            var user = await _userRepository.GetById(userId);
+            if (user != null)
             {
-                userToModified.Password = user.Password;
-                userToModified.Fullname = user.Fullname;
-                _appDbContext.Users.Update(userToModified);
-                await _appDbContext.SaveChangesAsync();
+                user.Password = password;
+                await _userRepository.ModifyUser(userId, user);
             }
         }
 
         public async Task DeleteAsync(int id)
         {
-            var user = await _appDbContext.Users.FirstOrDefaultAsync(u => u.Id == id);
-            if (user != null)
-                _appDbContext.Users.Remove(user);
-            await _appDbContext.SaveChangesAsync();
+            await _userRepository.DeleteUser(id);
         }
     }
 }
