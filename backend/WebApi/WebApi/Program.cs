@@ -16,6 +16,8 @@ builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(conn
 builder.Services.AddTransient<IUserRepository, UserRepository>();
 builder.Services.AddTransient<IUserManager, UserManager>();
 builder.Services.AddTransient<ILoginManager, LoginManager>();
+builder.Services.AddTransient<IRoomRepository, RoomRepository>();
+builder.Services.AddTransient<IRoomManager, RoomManager>();
 
 builder.Services.AddAutoMapper(typeof(MappingsProfiles));
 

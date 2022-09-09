@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 
 namespace Model.Entity
 {
-    public class UserEntity
+    public class RoomEntity
     {
-        public int UserId { get; set; }
-        public string Username { get; set; }
-        public string Password { get; set; }
-        public string? Fullname { get; set; }
+        public int RoomId { get; set; }
+        public string Name { get; set; }
+        public string Emblem { get; set; }
         public DateTime DateCreated { get; set; }
+
     }
 }

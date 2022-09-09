@@ -25,7 +25,7 @@ namespace Core.Repositories
 
         public async Task<UserEntity?> GetById(int userId)
         {
-            return await _appDbContext.Users.FirstOrDefaultAsync(u => u.Id == userId);
+            return await _appDbContext.Users.FirstOrDefaultAsync(u => u.UserId == userId);
         }
 
         public async Task<UserEntity?> GetByUsername(string username)
@@ -42,7 +42,7 @@ namespace Core.Repositories
 
         public async Task ModifyUser(int userId, UserEntity userModified)
         {
-            var user = await _appDbContext.Users.FirstOrDefaultAsync(u => u.Id == userId);
+            var user = await _appDbContext.Users.FirstOrDefaultAsync(u => u.UserId == userId);
             if (user != null)
             {
                 user.Username = userModified.Username;
@@ -54,7 +54,7 @@ namespace Core.Repositories
 
         public async Task DeleteUser(int userId)
         {
-            var user = _appDbContext.Users.FirstOrDefault(u => u.Id == userId);
+            var user = _appDbContext.Users.FirstOrDefault(u => u.UserId == userId);
             if (user != null)
                 _appDbContext.Remove(user);
             await _appDbContext.SaveChangesAsync();

@@ -15,6 +15,8 @@ namespace Model.Mappings
         {
             CreateMap<UserEntity, UserDto>();
             CreateMap<UserDto, UserEntity>();
+            CreateMap<RoomEntity,RoomDTO>();
+            CreateMap<RoomDTO,RoomEntity>();
         }
     }
 }

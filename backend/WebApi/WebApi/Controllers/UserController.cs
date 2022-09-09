@@ -98,7 +98,7 @@ namespace WebApi.Controllers
                     return NotFound(new { message = "User not found" });
                 if (user.Password != Encryptor.Encrypt(changePasswordDTO.OldPassword))
                     return BadRequest(new { message = "Wrong password" });
-                await _userManager.ChangePassword(user.Id, Encryptor.Encrypt(changePasswordDTO.NewPassword));
+                await _userManager.ChangePassword(user.UserId, Encryptor.Encrypt(changePasswordDTO.NewPassword));
                 return Ok(new { message = "Password saved" });
             }
         }
